@@ -6,8 +6,13 @@
 /*   By: camurill <camurill@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/07 13:44:36 by camurill          #+#    #+#             */
-/*   Updated: 2024/02/07 13:45:01 by camurill         ###   ########.fr       */
+/*   Updated: 2024/02/29 18:48:55 by camurill         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
+
+char	*ft_join_to_me(char *line)
+{
+	return (0);
+}

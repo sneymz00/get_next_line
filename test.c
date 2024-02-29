@@ -6,13 +6,20 @@
 /*   By: camurill <camurill@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/29 17:41:57 by camurill          #+#    #+#             */
-/*   Updated: 2024/02/29 17:59:03 by camurill         ###   ########.fr       */
+/*   Updated: 2024/02/29 18:42:18 by camurill         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <unistd.h>
 #include <fcntl.h>
 #include <stdio.h>
+
+/*
+	Tener en cuenta como se lee los archivos, primero hay que abrirlos y luego analizar
+	la lectura funciona a partir de bits, y tenemos que indicar el numero de bits que hay que leer
+	por ultimo, debemos cerrar el archivo
+*/
+
 
 int	main(void)
 {
