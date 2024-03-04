@@ -6,7 +6,7 @@
 /*   By: camurill <camurill@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/07 13:44:36 by camurill          #+#    #+#             */
-/*   Updated: 2024/03/04 12:08:37 by camurill         ###   ########.fr       */
+/*   Updated: 2024/03/04 16:11:32 by camurill         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,14 +22,16 @@ int	ft_strlen(char *str)
 	return (i);
 }
 
-char	*ft_join_to_me(char *line, char *step)
+char	*ft_join_to_me(char *line, char *step, int size) //modificar y corregir size
 {
 	char	*alpha;
 	int		i[1];
 
-	if (!line || !step)
-		return (0);
-	alpha = (char *)malloc(sizeof(char) * (strlen(line) + strlen(step) + 1));
+	if (!line || !step || size <= 0)
+		return (free(line), free(step), NULL);
+	if (size > BUFFER_SIZE)
+		size = BUFFER_SIZE;
+	alpha = (char *)malloc(sizeof(char) * (size + 1));
 	if (!alpha)
 		return (0);
 	i[0] = 0;
@@ -47,6 +49,8 @@ int	ft_end_file(char *str)
 	int	i;
 
 	i = 0;
+	if (!str)
+		return (0);
 	while (str[i])
 	{
 		if (str[i] == '\n')

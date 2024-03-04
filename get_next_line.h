@@ -6,7 +6,7 @@
 /*   By: camurill <camurill@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/07 13:26:42 by camurill          #+#    #+#             */
-/*   Updated: 2024/03/04 12:08:36 by camurill         ###   ########.fr       */
+/*   Updated: 2024/03/04 16:03:45 by camurill         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@
 int		ft_read(int fd, static char *buffer);
 int		ft_end_file(char *str);
 int		ft_strlen(char *str);
-char	*ft_join_to_me(char *line, char *step);
+char	*ft_join_to_me(char *line, char *step, int size);
 char	*get_next_line(int fd);
 void	*ft_create(int fd, char	*str)
 

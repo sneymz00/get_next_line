@@ -6,20 +6,34 @@
 /*   By: camurill <camurill@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/07 13:25:56 by camurill          #+#    #+#             */
-/*   Updated: 2024/03/04 12:08:33 by camurill         ###   ########.fr       */
+/*   Updated: 2024/03/04 16:11:33 by camurill         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 
-void	*ft_create(int fd, char	*str)
+char	*ft_create(int fd, char	*line)
 {
-	if (fd <= 0 && (!str || ft_end_file(str) == 1))
-		
-	read(fd, str, BUFFER_SIZE);
-	if (!str)
-		return (NULL);
-	
+	char	*letter;
+	int		size;
+
+	//if (fd <= 0 && (!str || ft_end_file(str) == 1))
+	if (ft_end_file(line) == 1)
+		return (line);
+	letter = malloc(sizeof(char) * (BUFFER_SIZE + 1));
+	if (!letter)
+		return (free(line), NULL);
+	size = read(fd, letter, BUFFER_SIZE);
+	if (!letter)
+		return (free(line), free(letter), NULL);
+	letter[size] = '\0';
+	line = ft_join_to_me(line, letter, size);
+	if (!line)
+		return (free(line), NULL);
+	if (ft_end_file(letter) == 0)
+		line = ft_create(fd, line);
+	free(letter);
+	return (line);
 }
 /*
 char	*ft_pre_line(char *file, int *number)
@@ -68,6 +82,7 @@ char	*ft_post_line(char *file)
 char	*get_next_line(int fd)
 {
 	static char	string = NULL;
+	char		*line;
 	char		*next_line;
 	int			i;
 
@@ -76,6 +91,7 @@ char	*get_next_line(int fd)
 	ft_create(fd, &string); //file size
 	if (string ==  NULL)
 		return (NULL);
+	line = ft_create(fd, string);
 	next_line = get_post_line(string);
 	//I need a funtion that clear or free
 	return (string);
