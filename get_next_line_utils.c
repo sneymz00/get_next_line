@@ -6,7 +6,7 @@
 /*   By: camurill <camurill@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/07 13:44:36 by camurill          #+#    #+#             */
-/*   Updated: 2024/03/05 15:57:57 by camurill         ###   ########.fr       */
+/*   Updated: 2024/03/05 18:01:42 by camurill         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,10 +22,11 @@ int	ft_strlen(char *str)
 	return (i);
 }
 
-char	*ft_join_to_me(char *line, char *step, int size) //modificar y corregir size
+char	*ft_join_to_me(char *line, char *step, int size)
 {
 	char	*alpha;
-	int		i[2];
+	int		i;
+	int		j;
 
 	if (!line || !step || size <= 0)
 		return (free(line), free(step), NULL);
@@ -34,13 +35,13 @@ char	*ft_join_to_me(char *line, char *step, int size) //modificar y corregir siz
 	alpha = (char *)malloc(sizeof(char) * (size + 1));
 	if (!alpha)
 		return (0);
-	i[0] = 0;
-	while (line[i[0]++])
-		alpha[i[0]] = line[i[0]];
-	i[1] = 0;
-	while (step[i[1]])
-		alpha[i[0]++] = step[i[1]++];
-	alpha[i[0]] = '\0';
+	i = 0;
+	while (line[i++])
+		alpha[i] = line[i];
+	j = 0;
+	while (step[j] != '\0')
+		alpha[i++] = step[j++];
+	alpha[i] = '\0';
 	return (alpha);
 }
 
@@ -75,4 +76,3 @@ int	ft_find_end(char *str)
 	}
 	return (i);
 }
- 

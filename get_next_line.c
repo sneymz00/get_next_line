@@ -6,7 +6,7 @@
 /*   By: camurill <camurill@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/07 13:25:56 by camurill          #+#    #+#             */
-/*   Updated: 2024/03/05 15:59:24 by camurill         ###   ########.fr       */
+/*   Updated: 2024/03/05 18:03:20 by camurill         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ char	*ft_read_line(int fd, char	*line)
 	if (!letter)
 		return (free(line), free(letter), NULL);
 	letter[size] = '\0';
-	line = ft_join_to_me(line, letter, size);
+	line = ft_join_to_me(letter, line, size);
 	if (!line)
 		return (free(line), NULL);
 	if (ft_end_file(letter) == 0)
@@ -41,24 +41,23 @@ char	*ft_line(char *file)
 	int		i;
 
 	if (!file)
-		return ( free(file), NULL);
+		return (free(file), NULL);
 	i = 0;
 	save_line = malloc(sizeof(char) * (ft_find_end(file) + 1));
 	while (file[i++] && ft_end_file(file) == 0)
 		save_line[i] = file[i];
 	save_line[i] = '\0';
-	//free() necesario para liberar save_line
 	return (save_line);
 }
 
 char	*ft_rest_line(char *file)
 {
-	char	*rest_line = NULL;
+	char	*rest_line;
 	int		i;
 	int		j;
 
 	if (!file)
-		return ( free(file), NULL);
+		return (free(file), NULL);
 	i = 0;
 	while (ft_end_file(file) == 1 && file[i])
 		i++;
@@ -66,13 +65,12 @@ char	*ft_rest_line(char *file)
 		i++;
 	j = 0;
 	rest_line = malloc(sizeof(char) * (ft_find_end(file) + 1));
-	while(file[i])
+	while (file[i])
 		rest_line[j++] = file[i++];
 	rest_line[j] = '\0';
 	free(file);
 	return (rest_line);
 }
-
 
 char	*get_next_line(int fd)
 {
@@ -81,7 +79,7 @@ char	*get_next_line(int fd)
 
 	if (fd < 0 || BUFFER_SIZE <= 0 || read(fd, &save, O_RDONLY) < 0)
 		return (NULL);
-	save = ft_read_line(fd, save); //file save
+	save = ft_read_line(fd, save);
 	if (!save)
 		return (NULL);
 	line = ft_line(save);
@@ -89,12 +87,20 @@ char	*get_next_line(int fd)
 	return (save);
 }
 /*
+#include <stdio.h>
+
 int main (void)
 {
 	int fd = open("test.txt", O_RDONLY);
-	char	lectura = ft_get_next_line(fd);
+	int i = 0;
 
-	write(1, lectura, 5);
+	while(i < 1)
+	{
+		printf("Line: %s", get_next_line(fd));
+		i++;
+	}
+	close(fd);
 	return (0);
 }
+
 */
