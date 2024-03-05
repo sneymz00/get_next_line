@@ -6,18 +6,17 @@
 /*   By: camurill <camurill@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/07 13:25:56 by camurill          #+#    #+#             */
-/*   Updated: 2024/03/04 16:11:33 by camurill         ###   ########.fr       */
+/*   Updated: 2024/03/05 15:59:24 by camurill         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 
-char	*ft_create(int fd, char	*line)
+char	*ft_read_line(int fd, char	*line)
 {
 	char	*letter;
 	int		size;
 
-	//if (fd <= 0 && (!str || ft_end_file(str) == 1))
 	if (ft_end_file(line) == 1)
 		return (line);
 	letter = malloc(sizeof(char) * (BUFFER_SIZE + 1));
@@ -31,72 +30,65 @@ char	*ft_create(int fd, char	*line)
 	if (!line)
 		return (free(line), NULL);
 	if (ft_end_file(letter) == 0)
-		line = ft_create(fd, line);
+		line = ft_read_line(fd, line);
 	free(letter);
 	return (line);
 }
-/*
-char	*ft_pre_line(char *file, int *number)
+
+char	*ft_line(char *file)
 {
+	char	*save_line;
 	int		i;
-	char	*line;
-	i = 0;
-	while(file[i] != '\n' || file[i])
-	{
-		line[i] = file[i];
-		i++;
-		number++;
-	}
-	return (line);
-}
-*/
-char	*ft_post_line(char *file)
-{
-	int 	i;
-	char	*post;
-	
-	i = 0;
+
 	if (!file)
-		return (NULL);
-	while (BUFFER_SIZE > 0 && file[i] != '\n')
+		return ( free(file), NULL);
+	i = 0;
+	save_line = malloc(sizeof(char) * (ft_find_end(file) + 1));
+	while (file[i++] && ft_end_file(file) == 0)
+		save_line[i] = file[i];
+	save_line[i] = '\0';
+	//free() necesario para liberar save_line
+	return (save_line);
+}
+
+char	*ft_rest_line(char *file)
+{
+	char	*rest_line = NULL;
+	int		i;
+	int		j;
+
+	if (!file)
+		return ( free(file), NULL);
+	i = 0;
+	while (ft_end_file(file) == 1 && file[i])
 		i++;
-	if (file[i] == '\0')
-	{
-		post = malloc(sizeof(char) * (BUFFER_SIZE + 1);
-		if (!post)
-			return (NULL);
-		ft_join_to_me(post, file);
-	}
-	else
-	{
-		post = malloc(sizeof(char) * (i + 1));
-		if (!post)
-			return (NULL);
-		post = ft_join_to_me(post, file);
-	}
+	if (file[i] != '\n')
+		i++;
+	j = 0;
+	rest_line = malloc(sizeof(char) * (ft_find_end(file) + 1));
+	while(file[i])
+		rest_line[j++] = file[i++];
+	rest_line[j] = '\0';
 	free(file);
-	return (post);
+	return (rest_line);
 }
 
 
 char	*get_next_line(int fd)
 {
-	static char	string = NULL;
+	static char	*save = NULL;
 	char		*line;
-	char		*next_line;
-	int			i;
 
-	if (fd < 0 || BUFFER_SIZE <= 0 || read(fd, &next_line, O_RDONLY) < 0)
+	if (fd < 0 || BUFFER_SIZE <= 0 || read(fd, &save, O_RDONLY) < 0)
 		return (NULL);
-	ft_create(fd, &string); //file size
-	if (string ==  NULL)
+	save = ft_read_line(fd, save); //file save
+	if (!save)
 		return (NULL);
-	line = ft_create(fd, string);
-	next_line = get_post_line(string);
-	//I need a funtion that clear or free
-	return (string);
+	line = ft_line(save);
+	save = ft_rest_line(save);
+	return (save);
 }
-
+/*
 int main (void)
 {
 	int fd = open("test.txt", O_RDONLY);
@@ -105,3 +97,4 @@ int main (void)
 	write(1, lectura, 5);
 	return (0);
 }
+*/

@@ -6,7 +6,7 @@
 /*   By: camurill <camurill@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/07 13:26:42 by camurill          #+#    #+#             */
-/*   Updated: 2024/03/04 16:03:45 by camurill         ###   ########.fr       */
+/*   Updated: 2024/03/05 15:59:38 by camurill         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,11 +21,13 @@
 #  define BUFFER_SIZE 42
 # endif
 
-int		ft_read(int fd, static char *buffer);
-int		ft_end_file(char *str);
-int		ft_strlen(char *str);
-char	*ft_join_to_me(char *line, char *step, int size);
+char	*ft_read_line(int fd, char	*line);
+char	*ft_line(char *file);
+char	*ft_rest_line(char *file);
 char	*get_next_line(int fd);
-void	*ft_create(int fd, char	*str)
+char	*ft_join_to_me(char *line, char *step, int size);
+int		ft_strlen(char *str);
+int		ft_end_file(char *str);
+int		ft_find_end(char *str);
 
 #endif
