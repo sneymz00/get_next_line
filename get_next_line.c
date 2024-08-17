@@ -5,102 +5,130 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: camurill <camurill@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/02/07 13:25:56 by camurill          #+#    #+#             */
-/*   Updated: 2024/03/05 18:03:20 by camurill         ###   ########.fr       */
+/*   Created: 2024/03/08 10:10:48 by camurill          #+#    #+#             */
+/*   Updated: 2024/03/08 12:08:33 by camurill         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 
-char	*ft_read_line(int fd, char	*line)
+char	*ft_get_text(int fd, char *text)
 {
-	char	*letter;
+	char	*new_text;
 	int		size;
 
-	if (ft_end_file(line) == 1)
-		return (line);
-	letter = malloc(sizeof(char) * (BUFFER_SIZE + 1));
-	if (!letter)
-		return (free(line), NULL);
-	size = read(fd, letter, BUFFER_SIZE);
-	if (!letter)
-		return (free(line), free(letter), NULL);
-	letter[size] = '\0';
-	line = ft_join_to_me(letter, line, size);
+	if (ft_end_file(text) == 1)
+		return (text);
+	new_text = malloc(sizeof(char) * (BUFFER_SIZE +1));
+	if (!new_text)
+		return (free(text), NULL);
+	size = read(fd, new_text, BUFFER_SIZE);
+	if (size < 0)
+		return (free(new_text), free(text), NULL);
+	new_text[size] = '\0';
+	if (size == 0)
+		return (free(new_text), text);
+	text = ft_join_to_me(text, new_text, size);
+	if (!text)
+		return (free(new_text), NULL);
+	if (ft_end_file(new_text) == 0)
+		text = ft_get_text(fd, text);
+	free(new_text);
+	return (text);
+}
+
+char	*ft_get_line(char *text)
+{
+	char	*line;
+	int		iter;
+	int		z;
+
+	iter = 0;
+	while (text[iter] && text[iter] != '\n')
+		iter++;
+	if (text[iter] == '\n')
+		iter++;
+	line = malloc(sizeof(char) * (iter + 1));
 	if (!line)
-		return (free(line), NULL);
-	if (ft_end_file(letter) == 0)
-		line = ft_read_line(fd, line);
-	free(letter);
+		return (free(text), NULL);
+	z = 0;
+	while (z < iter)
+	{
+		line[z] = text[z];
+		z++;
+	}
+	line[z] = '\0';
 	return (line);
 }
 
-char	*ft_line(char *file)
+char	*ft_get_save(char *text, int *info)
 {
-	char	*save_line;
+	char	*save;
+	int		start;
+	int		size;
 	int		i;
 
-	if (!file)
-		return (free(file), NULL);
+	start = ft_strlen(text, '\n');
+	if (text[start] == '\n')
+		start++;
+	size = 0;
+	while (text[start + size])
+		size++;
+	if (size == 0)
+		return (free(text), NULL);
+	save = malloc(sizeof(char) * (size + 1));
+	if (!save)
+		return (*info = -1, free(text), NULL);
 	i = 0;
-	save_line = malloc(sizeof(char) * (ft_find_end(file) + 1));
-	while (file[i++] && ft_end_file(file) == 0)
-		save_line[i] = file[i];
-	save_line[i] = '\0';
-	return (save_line);
-}
-
-char	*ft_rest_line(char *file)
-{
-	char	*rest_line;
-	int		i;
-	int		j;
-
-	if (!file)
-		return (free(file), NULL);
-	i = 0;
-	while (ft_end_file(file) == 1 && file[i])
+	while (i < size)
+	{
+		save[i] = text[start + i];
 		i++;
-	if (file[i] != '\n')
-		i++;
-	j = 0;
-	rest_line = malloc(sizeof(char) * (ft_find_end(file) + 1));
-	while (file[i])
-		rest_line[j++] = file[i++];
-	rest_line[j] = '\0';
-	free(file);
-	return (rest_line);
+	}
+	save[i] = '\0';
+	free(text);
+	return (save);
 }
 
 char	*get_next_line(int fd)
 {
-	static char	*save = NULL;
+	char		*text;
 	char		*line;
+	static char	*save;
+	int			size;
 
-	if (fd < 0 || BUFFER_SIZE <= 0 || read(fd, &save, O_RDONLY) < 0)
+	if (fd < 0)
 		return (NULL);
-	save = ft_read_line(fd, save);
-	if (!save)
-		return (NULL);
-	line = ft_line(save);
-	save = ft_rest_line(save);
-	return (save);
+	size = 0;
+	text = ft_get_text(fd, save);
+	if (!text)
+		return (save = NULL, NULL);
+	line = ft_get_line(text);
+	if (!line)
+		return (save = NULL, NULL);
+	save = ft_get_save(text, &size);
+	if (size == -1)
+		return (free(line), NULL);
+	return (line);
 }
 /*
+#include <fcntl.h>
 #include <stdio.h>
 
-int main (void)
+int main(void)
 {
 	int fd = open("test.txt", O_RDONLY);
 	int i = 0;
+	char *str;
 
-	while(i < 1)
+	while (1)
 	{
-		printf("Line: %s", get_next_line(fd));
-		i++;
+		str = get_next_line(fd);
+		printf("line: %s\n", str);
+		free(str);
+		if (str ==  NULL)
+			break ;
 	}
 	close(fd);
-	return (0);
 }
-
 */

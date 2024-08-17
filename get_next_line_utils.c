@@ -6,42 +6,46 @@
 /*   By: camurill <camurill@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/07 13:44:36 by camurill          #+#    #+#             */
-/*   Updated: 2024/03/05 18:01:42 by camurill         ###   ########.fr       */
+/*   Updated: 2024/03/08 12:11:31 by camurill         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 
-int	ft_strlen(char *str)
+int	ft_strlen(char *str, char type)
 {
 	int	i;
 
+	if (!str)
+		return (0);
 	i = 0;
-	while (str[i])
+	while (str[i] && str[i] != type)
 		i++;
 	return (i);
 }
 
-char	*ft_join_to_me(char *line, char *step, int size)
+char	*ft_join_to_me(char *line, char *step, int len)
 {
 	char	*alpha;
 	int		i;
 	int		j;
+	int		size;
 
-	if (!line || !step || size <= 0)
-		return (free(line), free(step), NULL);
-	if (size > BUFFER_SIZE)
-		size = BUFFER_SIZE;
-	alpha = (char *)malloc(sizeof(char) * (size + 1));
+	size = ft_strlen(line, '\0');
+	alpha = malloc(sizeof(char) * (size + len + 1));
 	if (!alpha)
-		return (0);
+		return (free(line), NULL);
 	i = 0;
-	while (line[i++])
+	while (i < size)
+	{
 		alpha[i] = line[i];
+		i++;
+	}
 	j = 0;
-	while (step[j] != '\0')
+	while (i < size + len)
 		alpha[i++] = step[j++];
 	alpha[i] = '\0';
+	free(line);
 	return (alpha);
 }
 
@@ -59,20 +63,4 @@ int	ft_end_file(char *str)
 		i++;
 	}
 	return (0);
-}
-
-int	ft_find_end(char *str)
-{
-	int	i;
-
-	i = 0;
-	if (!str)
-		return (0);
-	while (str[i])
-	{
-		if (str[i + 1] == '\n')
-			return (i);
-		i++;
-	}
-	return (i);
 }
